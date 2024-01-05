@@ -1,0 +1,36 @@
+name: Test application
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.x"
+    - name: Install googletrans
+      run: |
+        pip install googletrans==4.0.0-rc1
+    - name: Test
+      run: |
+        python rentry-para-mkdocs.py
+        python format-file.py
+        python fuck-heus.py
+    - name: Upload log file to GitHub
+      uses: actions/upload-artifact@v4
+      with:
+        name: scripts-log
+        path: |
+          rentry-para-mkdocs.log
+          format-file.log
+          fuck-heus.log
